@@ -1,0 +1,460 @@
+#include <WiFi.h>
+#include <WebServer.h>
+
+// ===============================
+// Wi-Fi Credentials
+// ===============================
+const char* ssid = "YOUR_WIFI_NAME";
+const char* password = "YOUR_WIFI_PASSWORD";
+
+WebServer server(80);
+
+// ===============================
+// Motor Direction Pins
+// ===============================
+#define M1_IN1 15
+#define M1_IN2 23
+
+#define M2_IN1 6
+#define M2_IN2 7
+
+#define M3_IN1 4
+#define M3_IN2 5
+
+#define M4_IN1 21
+#define M4_IN2 22
+
+// ===============================
+// Motor Enable / PWM Pins
+// ===============================
+#define M1_EN 8
+#define M2_EN 9
+#define M3_EN 10
+#define M4_EN 11
+
+int speedPWM = 150;
+
+// ===============================
+// Stop all motors
+// ===============================
+void stopAll() {
+  digitalWrite(M1_IN1, LOW);
+  digitalWrite(M1_IN2, LOW);
+  analogWrite(M1_EN, 0);
+
+  digitalWrite(M2_IN1, LOW);
+  digitalWrite(M2_IN2, LOW);
+  analogWrite(M2_EN, 0);
+
+  digitalWrite(M3_IN1, LOW);
+  digitalWrite(M3_IN2, LOW);
+  analogWrite(M3_EN, 0);
+
+  digitalWrite(M4_IN1, LOW);
+  digitalWrite(M4_IN2, LOW);
+  analogWrite(M4_EN, 0);
+}
+
+// ===============================
+// Movement Control
+// ===============================
+void moveRobot(String dir) {
+
+  stopAll();
+
+  // ---------- FORWARD ----------
+  if (dir == "forward") {
+
+    digitalWrite(M1_IN1, LOW);
+    digitalWrite(M1_IN2, HIGH);
+    analogWrite(M1_EN, speedPWM);
+
+    digitalWrite(M2_IN1, LOW);
+    digitalWrite(M2_IN2, HIGH);
+    analogWrite(M2_EN, speedPWM);
+
+    digitalWrite(M3_IN1, LOW);
+    digitalWrite(M3_IN2, HIGH);
+    analogWrite(M3_EN, speedPWM);
+
+    digitalWrite(M4_IN1, LOW);
+    digitalWrite(M4_IN2, HIGH);
+    analogWrite(M4_EN, speedPWM);
+  }
+
+  // ---------- BACKWARD ----------
+  else if (dir == "backward") {
+
+    digitalWrite(M1_IN1, HIGH);
+    digitalWrite(M1_IN2, LOW);
+    analogWrite(M1_EN, speedPWM);
+
+    digitalWrite(M2_IN1, HIGH);
+    digitalWrite(M2_IN2, LOW);
+    analogWrite(M2_EN, speedPWM);
+
+    digitalWrite(M3_IN1, HIGH);
+    digitalWrite(M3_IN2, LOW);
+    analogWrite(M3_EN, speedPWM);
+
+    digitalWrite(M4_IN1, HIGH);
+    digitalWrite(M4_IN2, LOW);
+    analogWrite(M4_EN, speedPWM);
+  }
+
+  // ---------- LEFT ----------
+  else if (dir == "left") {
+
+    digitalWrite(M1_IN1, LOW);
+    digitalWrite(M1_IN2, HIGH);
+    analogWrite(M1_EN, speedPWM);
+
+    digitalWrite(M2_IN1, HIGH);
+    digitalWrite(M2_IN2, LOW);
+    analogWrite(M2_EN, speedPWM);
+
+    digitalWrite(M3_IN1, LOW);
+    digitalWrite(M3_IN2, HIGH);
+    analogWrite(M3_EN, speedPWM);
+
+    digitalWrite(M4_IN1, HIGH);
+    digitalWrite(M4_IN2, LOW);
+    analogWrite(M4_EN, speedPWM);
+  }
+
+  // ---------- RIGHT ----------
+  else if (dir == "right") {
+
+    digitalWrite(M1_IN1, HIGH);
+    digitalWrite(M1_IN2, LOW);
+    analogWrite(M1_EN, speedPWM);
+
+    digitalWrite(M2_IN1, LOW);
+    digitalWrite(M2_IN2, HIGH);
+    analogWrite(M2_EN, speedPWM);
+
+    digitalWrite(M3_IN1, HIGH);
+    digitalWrite(M3_IN2, LOW);
+    analogWrite(M3_EN, speedPWM);
+
+    digitalWrite(M4_IN1, LOW);
+    digitalWrite(M4_IN2, HIGH);
+    analogWrite(M4_EN, speedPWM);
+  }
+
+  // ---------- FORWARD LEFT ----------
+  else if (dir == "forward_left") {
+
+    digitalWrite(M1_IN1, LOW);
+    digitalWrite(M1_IN2, HIGH);
+    analogWrite(M1_EN, speedPWM);
+
+    digitalWrite(M2_IN1, LOW);
+    digitalWrite(M2_IN2, LOW);
+    analogWrite(M2_EN, speedPWM);
+
+    digitalWrite(M3_IN1, LOW);
+    digitalWrite(M3_IN2, HIGH);
+    analogWrite(M3_EN, speedPWM);
+
+    digitalWrite(M4_IN1, LOW);
+    digitalWrite(M4_IN2, LOW);
+    analogWrite(M4_EN, speedPWM);
+  }
+
+  // ---------- FORWARD RIGHT ----------
+  else if (dir == "forward_right") {
+
+    digitalWrite(M1_IN1, LOW);
+    digitalWrite(M1_IN2, LOW);
+    analogWrite(M1_EN, speedPWM);
+
+    digitalWrite(M2_IN1, LOW);
+    digitalWrite(M2_IN2, HIGH);
+    analogWrite(M2_EN, speedPWM);
+
+    digitalWrite(M3_IN1, LOW);
+    digitalWrite(M3_IN2, LOW);
+    analogWrite(M3_EN, speedPWM);
+
+    digitalWrite(M4_IN1, LOW);
+    digitalWrite(M4_IN2, HIGH);
+    analogWrite(M4_EN, speedPWM);
+  }
+
+  // ---------- BACKWARD LEFT ----------
+  else if (dir == "backward_left") {
+
+    digitalWrite(M1_IN1, LOW);
+    digitalWrite(M1_IN2, LOW);
+    analogWrite(M1_EN, speedPWM);
+
+    digitalWrite(M2_IN1, HIGH);
+    digitalWrite(M2_IN2, LOW);
+    analogWrite(M2_EN, speedPWM);
+
+    digitalWrite(M3_IN1, LOW);
+    digitalWrite(M3_IN2, LOW);
+    analogWrite(M3_EN, speedPWM);
+
+    digitalWrite(M4_IN1, HIGH);
+    digitalWrite(M4_IN2, LOW);
+    analogWrite(M4_EN, speedPWM);
+  }
+
+  // ---------- BACKWARD RIGHT ----------
+  else if (dir == "backward_right") {
+
+    digitalWrite(M1_IN1, HIGH);
+    digitalWrite(M1_IN2, LOW);
+    analogWrite(M1_EN, speedPWM);
+
+    digitalWrite(M2_IN1, LOW);
+    digitalWrite(M2_IN2, LOW);
+    analogWrite(M2_EN, speedPWM);
+
+    digitalWrite(M3_IN1, HIGH);
+    digitalWrite(M3_IN2, LOW);
+    analogWrite(M3_EN, speedPWM);
+
+    digitalWrite(M4_IN1, LOW);
+    digitalWrite(M4_IN2, LOW);
+    analogWrite(M4_EN, speedPWM);
+  }
+
+  // ---------- ROTATE LEFT ----------
+  else if (dir == "rotate_left") {
+
+    digitalWrite(M1_IN1, LOW);
+    digitalWrite(M1_IN2, HIGH);
+    analogWrite(M1_EN, speedPWM);
+
+    digitalWrite(M2_IN1, LOW);
+    digitalWrite(M2_IN2, HIGH);
+    analogWrite(M2_EN, speedPWM);
+
+    digitalWrite(M3_IN1, HIGH);
+    digitalWrite(M3_IN2, LOW);
+    analogWrite(M3_EN, speedPWM);
+
+    digitalWrite(M4_IN1, HIGH);
+    digitalWrite(M4_IN2, LOW);
+    analogWrite(M4_EN, speedPWM);
+  }
+
+  // ---------- ROTATE RIGHT ----------
+  else if (dir == "rotate_right") {
+
+    digitalWrite(M1_IN1, HIGH);
+    digitalWrite(M1_IN2, LOW);
+    analogWrite(M1_EN, speedPWM);
+
+    digitalWrite(M2_IN1, HIGH);
+    digitalWrite(M2_IN2, LOW);
+    analogWrite(M2_EN, speedPWM);
+
+    digitalWrite(M3_IN1, LOW);
+    digitalWrite(M3_IN2, HIGH);
+    analogWrite(M3_EN, speedPWM);
+
+    digitalWrite(M4_IN1, LOW);
+    digitalWrite(M4_IN2, HIGH);
+    analogWrite(M4_EN, speedPWM);
+  }
+}
+
+// ===============================
+// Web Interface
+// ===============================
+void handleRoot() {
+
+  String html = R"rawliteral(
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>ESP32 Mecanum Bot</title>
+
+<style>
+body {
+  font-family: Arial;
+  text-align: center;
+  background: #f0f8ff;
+  padding: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 80px);
+  grid-template-rows: repeat(3, 80px);
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.btn {
+  font-size: 32px;
+  width: 80px;
+  height: 80px;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.stop {
+  background: #f44336;
+}
+</style>
+
+</head>
+
+<body>
+
+<h2>ESP32-C6 Mecanum Bot</h2>
+
+<div class="grid">
+
+<button class="btn" onclick="send('forward_left')">↖</button>
+<button class="btn" onclick="send('forward')">⬆</button>
+<button class="btn" onclick="send('forward_right')">↗</button>
+
+<button class="btn" onclick="send('left')">⬅</button>
+<button class="btn stop" onclick="send('stop')">⏹</button>
+<button class="btn" onclick="send('right')">➡</button>
+
+<button class="btn" onclick="send('backward_left')">↙</button>
+<button class="btn" onclick="send('backward')">⬇</button>
+<button class="btn" onclick="send('backward_right')">↘</button>
+
+</div>
+
+<h3>Rotation</h3>
+
+<button class="btn" onclick="send('rotate_left')">↺</button>
+<button class="btn" onclick="send('rotate_right')">↻</button>
+
+<h3>Speed Control</h3>
+
+<input type="range"
+       min="0"
+       max="255"
+       value="150"
+       id="slider">
+
+<p id="speedValue">Speed: 150</p>
+
+<script>
+
+function send(dir) {
+  fetch("/move?dir=" + dir);
+}
+
+const slider = document.getElementById("slider");
+const speedValue = document.getElementById("speedValue");
+
+slider.oninput = function() {
+
+  speedValue.innerText = "Speed: " + this.value;
+
+  fetch("/speed?value=" + this.value);
+};
+
+</script>
+
+</body>
+</html>
+)rawliteral";
+
+  server.send(200, "text/html", html);
+}
+
+// ===============================
+// Handle Movement Request
+// ===============================
+void handleMove() {
+
+  String dir = server.arg("dir");
+
+  if (dir == "stop") {
+    stopAll();
+  } else {
+    moveRobot(dir);
+  }
+
+  server.send(200, "text/plain", "OK");
+}
+
+// ===============================
+// Handle Speed Request
+// ===============================
+void handleSpeed() {
+
+  int val = server.arg("value").toInt();
+
+  if (val >= 0 && val <= 255) {
+    speedPWM = val;
+  }
+
+  server.send(
+    200,
+    "text/plain",
+    "Speed set to " + String(speedPWM)
+  );
+}
+
+// ===============================
+// Setup
+// ===============================
+void setup() {
+
+  Serial.begin(115200);
+
+  pinMode(M1_IN1, OUTPUT);
+  pinMode(M1_IN2, OUTPUT);
+  pinMode(M1_EN, OUTPUT);
+
+  pinMode(M2_IN1, OUTPUT);
+  pinMode(M2_IN2, OUTPUT);
+  pinMode(M2_EN, OUTPUT);
+
+  pinMode(M3_IN1, OUTPUT);
+  pinMode(M3_IN2, OUTPUT);
+  pinMode(M3_EN, OUTPUT);
+
+  pinMode(M4_IN1, OUTPUT);
+  pinMode(M4_IN2, OUTPUT);
+  pinMode(M4_EN, OUTPUT);
+
+  stopAll();
+
+  // Connect to Wi-Fi
+  WiFi.begin(ssid, password);
+  WiFi.setSleep(false);
+
+  Serial.print("Connecting to Wi-Fi");
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println();
+  Serial.print("Connected! IP: ");
+  Serial.println(WiFi.localIP());
+
+  // Web server routes
+  server.on("/", handleRoot);
+  server.on("/move", handleMove);
+  server.on("/speed", handleSpeed);
+
+  server.begin();
+
+  Serial.println("Web server started.");
+}
+
+// ===============================
+// Main Loop
+// ===============================
+void loop() {
+
+  server.handleClient();
+}
